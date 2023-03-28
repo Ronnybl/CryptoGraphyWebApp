@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>symmetric</title>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+<script type="text/javascript" src="scripts/symmetric.js"></script>
+</head>
+<body onLoad="resetPage();">
+	<form id="symForm" accept-charset="utf-8">
+		<div class="col-12">
+			<label class="visually-none" for="symmetricMethod">Preference</label>
+			<select class="form-select" id="symmetricMethod">
+				<option selected>Choose A Topic</option>
+				<option value="stream">Stream Cipher</option>
+				<option value="rc4">RC4</option>
+				<option value="bbs">Blum Blum Shub</option>
+				<option value="des">DES</option>
+				<option value="aes">AES</option>
+			</select>
+		</div>
+		<div style="display: none;" id="streamBox">
+			<div class="col-md-6">
+				<label for="streamInput" class="form-label">Input</label> <input
+					type="text" class="form-control" id="streamInput">
+			</div>
+			<div class="col-md-6">
+				<label for="streamShift" class="form-label">Key</label> <input type="text"
+					class="form-control" id="streamShift">
+			</div>
+			<input type="radio" id="streamEncrypt" name="streamProcess" value="e">   <label for="streamEncrypt">Encrypt</label>
+			<input type="radio" id="streamDecrypt" name="streamProcess" value="d">   <label for="streamDecrypt">Decrypt</label>
+			<br>
+			<input type="radio" id="bin" name="streamBase" value="bin">   <label
+			for="bin">Base 2</label> <input type="radio" id="decimal"
+			name="streamBase" value="alphabetical">   <label for="decimal">Base
+			26</label><br>
+			<input type="button" value="Stream Cipher" onClick= "computeStream('Crypto?cryptomethod=symmetric&method=stream')">
+		</div>
+		<div style="display: none;" id="rc4Box">
+			<p>Explanation</p>
+			<div class="col-md-6">
+				<label for="rc4Input" class="form-label">Input</label> <input
+					type="text" class="form-control" id="rc4Input">
+			</div>
+			<div class="col-md-6">
+				<label for="rc4key" class="form-label">Key</label> <input
+					type="text" class="form-control" id="rc4key">
+			</div>
+			<br>
+			<input type="button" value="RC4"
+				onClick="computeRC4('Crypto?cryptomethod=symmetric&method=rc4');">
+		</div>
+		<div style="display: none;" id="bbsBox">
+			<p>Explanation</p>
+			<div class="col-md-6">
+				<label for="bbsInput" class="form-label">Input</label> <input type="text"
+					class="form-control" id="bbsInput">
+			</div>
+			<div class="col-md-6">
+				<label for="pVal" class="form-label">p</label> <input type="text"
+					class="form-control" id="pVal">
+			</div>
+			<div class="col-md-6">
+				<label for="qVal" class="form-label">q</label> <input type="text"
+					class="form-control" id="qVal">
+			</div>
+			<div class="col-md-6">
+				<label for="bbsSeed" class="form-label">Seed</label> <input type="text"
+					class="form-control" id="bbsSeed">
+			</div>
+			<br>
+			<input type = "button" value="Blum Blum Shub"
+				onClick="computeBBS('Crypto?cryptomethod=symmetric&method=bbs');">
+		</div>
+		<div style="display: none;" id="desBox">
+			<div class="col-md-6">
+				<label for="desInput" class="form-label">Input</label> <input
+					type="text" class="form-control" id="desInput">
+			</div>
+			<div class="col-md-6">
+				<label for="desKey" class="form-label">Key</label> <input type="text"
+					class="form-control" id="desKey">
+			</div>
+			<input type="radio" id="desEncrypt" name="desProcess" value="e">   <label for="desEncrypt">Encrypt</label>
+			<input type="radio" id="desDecrypt" name="desProcess" value="d">   <label for="desDecrypt">Decrypt</label>
+			<br>
+			<input type="button" value="DES Cipher" onClick= "computeDES('Crypto?cryptomethod=symmetric&method=des')">
+		</div>
+		<div style="display: none;" id="aesBox">
+			<div class="col-md-6">
+				<label for="aesInput" class="form-label">Input</label> <input
+					type="text" class="form-control" id="aesInput">
+			</div>
+			<div class="col-md-6">
+				<label for="aesKey" class="form-label">Key</label> <input type="text"
+					class="form-control" id="aesKey">
+			</div>
+			<input type="radio" id="aesEncrypt" name="aesProcess" value="e">   <label for="aesEncrypt">Encrypt</label>
+			<input type="radio" id="aesDecrypt" name="aesProcess" value="d">   <label for="aesDecrypt">Decrypt</label>
+			<br>
+			<input type="button" value="AES Cipher" onClick= "computeAES('Crypto?cryptomethod=symmetric&method=aes')">
+		</div>
+		<br>
+		<h2 id="output"></h2>
+		<script>
+			const el = document.getElementById('symmetricMethod');
+			const streamBox = document.getElementById('streamBox');
+			const rc4Box = document.getElementById('rc4Box');
+			const bbsBox = document.getElementById('bbsBox');
+			const desBox = document.getElementById('desBox');
+			const aesBox = document.getElementById('aesBox');
+
+			el.addEventListener('change', function handleChange(event) {
+				if (event.target.value == 'stream') {
+					streamBox.style.display = 'block';
+					rc4Box.style.display = 'none';
+					bbsBox.style.display = 'none';
+					desBox.style.display = 'none';
+					aesBox.style.display = 'none';
+				} else if (event.target.value == 'rc4') {
+					streamBox.style.display = 'none';
+					rc4Box.style.display = 'block';
+					bbsBox.style.display = 'none';
+					desBox.style.display = 'none';
+					aesBox.style.display = 'none';
+				} else if (event.target.value == 'bbs') {
+					streamBox.style.display = 'none';
+					rc4Box.style.display = 'none';
+					bbsBox.style.display = 'block';
+					desBox.style.display = 'none';
+					aesBox.style.display = 'none';
+				} else if (event.target.value == 'des') {
+					streamBox.style.display = 'none';
+					rc4Box.style.display = 'none';
+					bbsBox.style.display = 'none';
+					desBox.style.display = 'block';
+					aesBox.style.display = 'none';
+				} else if (event.target.value == 'aes') {
+					streamBox.style.display = 'none';
+					rc4Box.style.display = 'none';
+					bbsBox.style.display = 'none';
+					desBox.style.display = 'none';
+					aesBox.style.display = 'block';
+				} else {
+					streamBox.style.display = 'none';
+					rc4Box.style.display = 'none';
+					bbsBox.style.display = 'none';
+					desBox.style.display = 'none';
+					aesBox.style.display = 'none';
+				}
+			});
+		</script>
+	</form>
+</body>
+</html>

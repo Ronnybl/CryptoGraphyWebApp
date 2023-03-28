@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>foundation</title>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+<script type="text/javascript" src="scripts/foundation.js"></script>
+</head>
+<body onLoad="resetPage();">
+	<form id="foundationForm">
+		<div class="col-12">
+			<label class="visually-none" for="foundationMethod">Preference</label>
+			<select class="form-select" id="foundationMethod">
+				<option selected>Choose A Topic</option>
+				<option value="caesar">Caesar Cipher</option>
+				<option value="affine">Affine Cipher</option>
+				<option value="vigenere">Vigenere Cipher</option>
+			</select>
+		</div>
+		<div style="display: none;" id="caesarBox">
+			<div class="col-md-6">
+				<label for="textInput" class="form-label">Input</label> <input
+					type="text" class="form-control" id="caesarInput">
+			</div>
+			<div class="col-md-6">
+				<label for="caesarShift" class="form-label">Shift Key</label> <input type="text"
+					class="form-control" id="caesarShift">
+			</div>
+			<input type="radio" id="caesarEncrypt" name="caesarProcess" value="e">   <label for="caesarEncrypt">Encrypt</label>
+			<input type="radio" id="caesarDecrypt" name="caesarProcess" value="d">   <label for="caesarDecrypt">Decrypt</label>
+			<br>
+			<input type="button" value="Caesar Cipher" onClick= "computeCaesar('Crypto?cryptomethod=foundation&method=caesar')">
+		</div>
+		<div style="display: none;" id="affineBox">
+			<p>Explanation</p>
+			<div class="col-md-6">
+				<label for="num1" class="form-label">Input</label> <input
+					type="text" class="form-control" id="affineInput">
+			</div>
+			<div class="col-md-6">
+				<label for="affineAlpha" class="form-label">Alpha</label> <input
+					type="text" class="form-control" id="affineAlpha">
+			</div>
+			<div class="col-md-6">
+				<label for="affineBeta" class="form-label">Beta</label> <input
+					type="text" class="form-control" id="affineBeta">
+			</div>
+			<input type="radio" id="affineEncrypt" name="affineProcess" value="e">   <label for="affineEncrypt">Encrypt</label>
+			<input type="radio" id="affineDecrypt" name="affineProcess" value="d">   <label for="affineDecrypt">Decrypt</label>
+			<br>
+			<input type="button" value="Affine Cipher"
+				onClick="computeAffine('Crypto?cryptomethod=foundation&method=affine')">
+		</div>
+		<div style="display: none;" id="vigenereBox">
+			<p>Explanation</p>
+			<div class="col-md-6">
+				<label for="num1" class="form-label">Input Text</label> <input type="text"
+					class="form-control" id="vigenereInput">
+			</div>
+			<div class="col-md-6">
+				<label for="num2" class="form-label">Key</label> <input type="text"
+					class="form-control" id="vigenereKey">
+			</div>
+			
+			<input type="radio" id="vigenereEncrypt" name="vigenereProcess" value="e">   <label for="vigenereEncrypt">Encrypt</label>
+			<input type="radio" id="vigenereDecrypt" name="vigenereProcess" value="d">   <label for="vigenereDecrypt">Decrypt</label>
+			<br>
+			<input type="button" value="Vigenere"
+				onClick="computeVigenere('Crypto?cryptomethod=foundation&method=vigenere')">
+		</div>
+		<br>
+		<h2 id="output"></h2>
+		<script>
+			const el = document.getElementById('foundationMethod');
+			const caesarBox = document.getElementById('caesarBox');
+			const affineBox = document.getElementById('affineBox');
+			const vigenereBox = document.getElementById('vigenereBox');
+
+		
+			el.addEventListener('change', function handleChange(event) {
+				if (event.target.value == 'caesar') {
+					caesarBox.style.display = 'block';
+					affineBox.style.display = 'none';
+					vigenereBox.style.display = 'none';
+				} else if (event.target.value == 'affine') {
+					caesarBox.style.display = 'none';
+					affineBox.style.display = 'block';
+					vigenereBox.style.display = 'none';
+				} else if (event.target.value == 'vigenere') {
+					caesarBox.style.display = 'none';
+					affineBox.style.display = 'none';
+					vigenereBox.style.display = 'block';
+				} else {
+					caesarBox.style.display = 'none';
+					affineBox.style.display = 'none';
+					vigenereBox.style.display = 'none';
+				}
+			});
+		</script>
+	</form>
+</body>
+</html>

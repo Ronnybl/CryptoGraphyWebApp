@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Asymmetric</title>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+<script type="text/javascript" src="scripts/asymmetric.js"></script>
+</head>
+<body onLoad="resetPage();">
+	<form id="asymForm" accept-charset="utf-8">
+		<div class="col-12">
+			<label class="visually-none" for="asymmetricMethod">Preference</label>
+			<select class="form-select" id="asymmetricMethod">
+				<option selected>Choose A Topic</option>
+				<option value="dh">Diffie-Hellman Key Exchange</option>
+				<option value="ea">Euclidean Algorithm</option>
+				<option value="eea">Extended Euclidean Algorithm</option>
+				<option value="mrpt">Miller-Rabin Primality Test</option>
+				<option value="rsa">RSA</option>
+			</select>
+		</div>
+		<div style="display: none;" id="dhBox">
+			<p>Explanation</p>
+			<div class="col-md-6">
+				<label for="user1" class="form-label">First User's Private
+					Key</label> <input type="text" class="form-control" id="user1">
+			</div>
+			<div class="col-md-6">
+				<label for="user2" class="form-label">Second User's Private
+					Key</label> <input type="text" class="form-control" id="user2">
+			</div>
+			<div class="col-12">
+				<label for="publicP" class="form-label">Public Parameter P</label> <input
+					type="text" class="form-control" id="publicP">
+			</div>
+			<div class="col-12">
+				<label for="publicAlpha" class="form-label">Public Parameter
+					Alpha</label> <input type="text" class="form-control" id="publicAlpha">
+			</div>
+			<br>
+			<input type="button" value="Diffie-Hellman Key Exchange" onClick="computeDH('Crypto?cryptomethod=asymmetric&method=dh');">
+		</div>
+		<div style="display: none;" id="eaBox">
+			<p>Explanation</p>
+			<div class="col-md-6">
+				<label for="num1" class="form-label">First Integer</label> <input
+					type="text" class="form-control" id="num1">
+			</div>
+			<div class="col-md-6">
+				<label for="num2" class="form-label">Second Integer</label> <input
+					type="text" class="form-control" id="num2">
+			</div>
+			<br>
+			<input type="button" value="Euclidean Algorithm"
+				onClick="computeEA('Crypto?cryptomethod=asymmetric&method=ea');">
+		</div>
+		<div style="display: none;" id="eeaBox">
+			<p>Explanation</p>
+			<div class="col-md-6">
+				<label for="num1" class="form-label">X</label> <input type="text"
+					class="form-control" id="eeanum1">
+			</div>
+			<div class="col-md-6">
+				<label for="num2" class="form-label">Y</label> <input type="text"
+					class="form-control" id="eeanum2">
+			</div>
+			<div class="col-md-6">
+				<label for="num3" class="form-label">X1</label> <input type="text"
+					class="form-control" id="eeanum3">
+			</div>
+			<div class="col-md-6">
+				<label for="num4" class="form-label">Y1</label> <input type="text"
+					class="form-control" id="eeanum4">
+			</div>
+			<br>
+			<input type = "button" value="Extended Euclidean Algorithm"
+				onClick="computeEEA('Crypto?cryptomethod=asymmetric&method=eea');">
+		</div>
+		<div style="display: none;" id="mrptBox">
+			<p>Explanation</p>
+			<div class="col-md-6">
+				<label for="mrNum" class="form-label">Integer</label> <input
+					type="text" class="form-control" id="mrNum">
+			</div>
+			<input type="radio" id="bin" name="mrBase" value="2">   <label
+				for="bin">Base 2</label> <input type="radio" id="decimal"
+				name="mrBase" value="10">   <label for="decimal">Base
+				10</label><br> <input type="button"
+				value="Miller-Rabin Primality Test"
+				onClick="computeMRPT('/Cryptography_Page/Crypto?cryptomethod=asymmetric&method=mrpt');">
+		</div>
+		<div style="display: none;" id="rsaBox">
+			<div class="col-md-6">
+				<label for="textInput" class="form-label">Input</label> <input
+					type="text" class="form-control" id="textInput">
+			</div>
+			<div class="col-md-6">
+				<label for="mod" class="form-label">mod n</label> <input type="text"
+					class="form-control" id="mod">
+			</div>
+			<input type="radio" id="encrypt" name="process" value="e"
+				onClick="rsaEncryptOption();">   <label for="encrypt">Encrypt</label>
+			<input type="radio" id="decrypt" name="process" value="d"
+				onClick="rsaDecryptOption();">   <label for="decrypt">Decrypt</label>
+			<div class="col-md-6">
+				<label style="display: none;" for="eVal" class="form-label"
+					id="eVallbl">e</label> <input style="display: none;" type="text"
+					class="form-control" id="eVal">
+			</div>
+			<div class="col-md-6">
+				<label style="display: none;" for="dVal" class="form-label"
+					id="dVallbl">d</label> <input style="display: none;" type="text"
+					class="form-control" id="dVal">
+			</div>
+			<input type="button" value="RSA"
+				onClick="computeRSA('Crypto?cryptomethod=asymmetric&method=rsa');">
+		</div>
+		<br>
+		<h2 id="output"></h2>
+		<script>
+			const el = document.getElementById('asymmetricMethod');
+			const dhBox = document.getElementById('dhBox');
+			const eaBox = document.getElementById('eaBox');
+			const eeaBox = document.getElementById('eeaBox');
+			const mrptBox = document.getElementById('mrptBox');
+			const rsaBox = document.getElementById('rsaBox');
+
+			el.addEventListener('change', function handleChange(event) {
+				if (event.target.value == 'dh') {
+					dhBox.style.display = 'block';
+					eaBox.style.display = 'none';
+					eeaBox.style.display = 'none';
+					mrptBox.style.display = 'none';
+					rsaBox.style.display = 'none';
+				} else if (event.target.value == 'ea') {
+					dhBox.style.display = 'none';
+					eaBox.style.display = 'block';
+					eeaBox.style.display = 'none';
+					mrptBox.style.display = 'none';
+					rsaBox.style.display = 'none';
+				} else if (event.target.value == 'eea') {
+					dhBox.style.display = 'none';
+					eaBox.style.display = 'none';
+					eeaBox.style.display = 'block';
+					mrptBox.style.display = 'none';
+					rsaBox.style.display = 'none';
+				} else if (event.target.value == 'mrpt') {
+					dhBox.style.display = 'none';
+					eaBox.style.display = 'none';
+					eeaBox.style.display = 'none';
+					mrptBox.style.display = 'block';
+					rsaBox.style.display = 'none';
+				} else if (event.target.value == 'rsa') {
+					dhBox.style.display = 'none';
+					eaBox.style.display = 'none';
+					eeaBox.style.display = 'none';
+					mrptBox.style.display = 'none';
+					rsaBox.style.display = 'block';
+				} else {
+					dhBox.style.display = 'none';
+					eaBox.style.display = 'none';
+					eeaBox.style.display = 'none';
+					mrptBox.style.display = 'none';
+					rsaBox.style.display = 'none';
+				}
+			});
+		</script>
+	</form>
+</body>
+</html>
