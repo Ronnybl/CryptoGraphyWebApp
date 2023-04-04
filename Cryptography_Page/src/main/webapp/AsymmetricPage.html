@@ -10,6 +10,22 @@
 <script type="text/javascript" src="scripts/asymmetric.js"></script>
 </head>
 <body onLoad="resetPage();">
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
+		<a class="navbar-brand" href="#"></a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#navbarNav" aria-controls="navbarNav"
+			aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav">
+				<li class="nav-item"><a class="nav-link" href="MainPage.html">Home</a></li>
+				<li class="nav-item active"><a class="nav-link" href="AsymmetricPage.html">Asymmetric <span class="sr-only">(current)</span></a></li>
+				<li class="nav-item"><a class="nav-link" href="FoundationPage.html">Foundation</a></li>
+				<li class="nav-item"><a class="nav-link" href="SymmetricPage.html">Symmetric</a></li>
+			</ul>
+		</div>
+	</nav>
 	<form id="asymForm" accept-charset="utf-8">
 		<div class="col-12">
 			<label class="visually-none" for="asymmetricMethod">Preference</label>
@@ -23,34 +39,39 @@
 			</select>
 		</div>
 		<div style="display: none;" id="dhBox">
+			<h1>Diffie-Hellman Key Exchange</h1>
+			<p>A key exchanged proposed in 1976, and currently used in SSL/TLS, SSH, IPSec. Both parties agree on publicly known parameters, p and alpha, and then choose
+			a random private key. The process involves both sides taking the alpha and raising it to the exponent of their private key mod p. They then exchange values and 
+			raise the other's value to the power of their own private key mod p and that is the session key.</p>
 			<p>Explanation</p>
 			<div class="col-md-6">
 				<label for="user1" class="form-label">First User's Private
-					Key</label> <input type="text" class="form-control" id="user1">
+					Key</label><span style="display:none;" id="dh-user1-error">*</span> <input type="text" class="form-control" id="user1">
 			</div>
 			<div class="col-md-6">
 				<label for="user2" class="form-label">Second User's Private
-					Key</label> <input type="text" class="form-control" id="user2">
+					Key</label><span style="display:none;" id="dh-user2-error">*</span> <input type="text" class="form-control" id="user2">
 			</div>
 			<div class="col-12">
-				<label for="publicP" class="form-label">Public Parameter P</label> <input
+				<label for="publicP" class="form-label">Public Parameter P</label><span style="display:none;" id="dh-p-error">*</span> <input
 					type="text" class="form-control" id="publicP">
 			</div>
 			<div class="col-12">
 				<label for="publicAlpha" class="form-label">Public Parameter
-					Alpha</label> <input type="text" class="form-control" id="publicAlpha">
+					Alpha</label><span style="display:none;" id="dh-alpha-error">*</span> <input type="text" class="form-control" id="publicAlpha">
 			</div>
 			<br>
 			<input type="button" value="Diffie-Hellman Key Exchange" onClick="computeDH('Crypto?cryptomethod=asymmetric&method=dh');">
 		</div>
 		<div style="display: none;" id="eaBox">
-			<p>Explanation</p>
+			<h1>Euclidean Algorithm</h1>
+			<p>This method takes two numbers and finds the greatest common divisor of the two integers.</p>
 			<div class="col-md-6">
-				<label for="num1" class="form-label">First Integer</label> <input
+				<label for="num1" class="form-label">First Integer</label><span style="display:none;" id="ea-num1-error">*</span> <input
 					type="text" class="form-control" id="num1">
 			</div>
 			<div class="col-md-6">
-				<label for="num2" class="form-label">Second Integer</label> <input
+				<label for="num2" class="form-label">Second Integer</label><span style="display:none;" id="ea-num2-error">*</span> <input
 					type="text" class="form-control" id="num2">
 			</div>
 			<br>
@@ -58,21 +79,23 @@
 				onClick="computeEA('Crypto?cryptomethod=asymmetric&method=ea');">
 		</div>
 		<div style="display: none;" id="eeaBox">
-			<p>Explanation</p>
+			<h1>Extended Euclidean Algorithm</h1>
+			<p>An extension of Euclidean algorithm, it calculates the greatest common divisor of two integers (ex. X and Y) and can be used to find the modular inverse of two values
+			of two values (ex. a and b), such that it follows the formula ax + by = gcd(a,b)</p>
 			<div class="col-md-6">
-				<label for="num1" class="form-label">X</label> <input type="text"
+				<label for="num1" class="form-label">X</label><span style="display:none;" id="eea-x-error">*</span> <input type="text"
 					class="form-control" id="eeanum1">
 			</div>
 			<div class="col-md-6">
-				<label for="num2" class="form-label">Y</label> <input type="text"
+				<label for="num2" class="form-label">Y</label><span style="display:none;" id="eea-y-error">*</span> <input type="text"
 					class="form-control" id="eeanum2">
 			</div>
 			<div class="col-md-6">
-				<label for="num3" class="form-label">X1</label> <input type="text"
+				<label for="num3" class="form-label">X1</label><span style="display:none;" id="eea-x1-error">*</span> <input type="text"
 					class="form-control" id="eeanum3">
 			</div>
 			<div class="col-md-6">
-				<label for="num4" class="form-label">Y1</label> <input type="text"
+				<label for="num4" class="form-label">Y1</label><span style="display:none;" id="eea-y1-error">*</span> <input type="text"
 					class="form-control" id="eeanum4">
 			</div>
 			<br>
@@ -80,9 +103,10 @@
 				onClick="computeEEA('Crypto?cryptomethod=asymmetric&method=eea');">
 		</div>
 		<div style="display: none;" id="mrptBox">
-			<p>Explanation</p>
+			<h1>Miller Rabin Primality Test</h1>
+			<p>A probabilistic primality test, used to determine if a given value is likely to be prime or composite</p>
 			<div class="col-md-6">
-				<label for="mrNum" class="form-label">Integer</label> <input
+				<label for="mrNum" class="form-label">Integer</label><span style="display:none;" id="mr-num-error">*</span> <input
 					type="text" class="form-control" id="mrNum">
 			</div>
 			<input type="radio" id="bin" name="mrBase" value="2">   <label
@@ -93,8 +117,12 @@
 				onClick="computeMRPT('/Cryptography_Page/Crypto?cryptomethod=asymmetric&method=mrpt');">
 		</div>
 		<div style="display: none;" id="rsaBox">
+			<h1>RSA</h1>
+			<p>RSA (known as Rivest-Shamir-Adleman) is a public-key cryptosystem used for secure data transmission (mainly keys), and digital signatures. They
+			tend to have public keys with values n and e as well as private value d unique per user. To encrypt plaintext x to ciphertext y the following is done
+			y = x^e mod n and to decrypt it's x = y^d mod n.</p>
 			<div class="col-md-6">
-				<label for="textInput" class="form-label">Input</label> <input
+				<label for="textInput" class="form-label">Input</label><span style="display:none;" id="rsa-text-error">*</span> <input
 					type="text" class="form-control" id="textInput">
 			</div>
 			<div class="col-md-6">
@@ -107,12 +135,12 @@
 				onClick="rsaDecryptOption();">   <label for="decrypt">Decrypt</label>
 			<div class="col-md-6">
 				<label style="display: none;" for="eVal" class="form-label"
-					id="eVallbl">e</label> <input style="display: none;" type="text"
+					id="eVallbl">e</label><span style="display:none;" id="rsa-e-error">*</span> <input style="display: none;" type="text"
 					class="form-control" id="eVal">
 			</div>
 			<div class="col-md-6">
 				<label style="display: none;" for="dVal" class="form-label"
-					id="dVallbl">d</label> <input style="display: none;" type="text"
+					id="dVallbl">d</label><span style="display:none;" id="rsa-d-error">*</span> <input style="display: none;" type="text"
 					class="form-control" id="dVal">
 			</div>
 			<input type="button" value="RSA"

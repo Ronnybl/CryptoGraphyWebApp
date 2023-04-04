@@ -10,6 +10,23 @@
 <script type="text/javascript" src="scripts/symmetric.js"></script>
 </head>
 <body onLoad="resetPage();">
+	<nav class="navbar navbar-expand-lg navbar-light"
+		style="background-color: #e3f2fd;">
+		<a class="navbar-brand" href="#"></a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#navbarNav" aria-controls="navbarNav"
+			aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav">
+				<li class="nav-item"><a class="nav-link" href="MainPage.html">Home</a></li>
+				<li class="nav-item"><a class="nav-link" href="AsymmetricPage.html">Asymmetric</a></li>
+				<li class="nav-item"><a class="nav-link" href="FoundationPage.html">Foundation</a></li>
+				<li class="nav-item active"><a class="nav-link" href="SymmetricPage.html">Symmetric <span class="sr-only">(current)</span></a></li>
+			</ul>
+		</div>
+	</nav>
 	<form id="symForm" accept-charset="utf-8">
 		<div class="col-12">
 			<label class="visually-none" for="symmetricMethod">Preference</label>
@@ -23,86 +40,116 @@
 			</select>
 		</div>
 		<div style="display: none;" id="streamBox">
+		<h1>Stream Cipher</h1>
+			<p>A stream cipher encrypts and decrypts every bit individually. A corresponding keystream of equal size is combined and shifts the cipher/plain text
+			to yield the product. An error will occur if the input and key are not of equal size.</p>
 			<div class="col-md-6">
-				<label for="streamInput" class="form-label">Input</label> <input
+				<label for="streamInput" class="form-label">Input</label><span
+					style="display: none;" id="stream-input-error">*</span> <input
 					type="text" class="form-control" id="streamInput">
 			</div>
 			<div class="col-md-6">
-				<label for="streamShift" class="form-label">Key</label> <input type="text"
-					class="form-control" id="streamShift">
+				<label for="streamShift" class="form-label">Key</label><span
+					style="display: none;" id="stream-shift-error">*</span> <input
+					type="text" class="form-control" id="streamShift">
 			</div>
-			<input type="radio" id="streamEncrypt" name="streamProcess" value="e">   <label for="streamEncrypt">Encrypt</label>
-			<input type="radio" id="streamDecrypt" name="streamProcess" value="d">   <label for="streamDecrypt">Decrypt</label>
-			<br>
-			<input type="radio" id="bin" name="streamBase" value="bin">   <label
-			for="bin">Base 2</label> <input type="radio" id="decimal"
-			name="streamBase" value="alphabetical">   <label for="decimal">Base
-			26</label><br>
-			<input type="button" value="Stream Cipher" onClick= "computeStream('Crypto?cryptomethod=symmetric&method=stream')">
+			<input type="radio" id="streamEncrypt" name="streamProcess" value="e">
+			  <label for="streamEncrypt">Encrypt</label> <input type="radio"
+				id="streamDecrypt" name="streamProcess" value="d">   <label
+				for="streamDecrypt">Decrypt</label> <br> <input type="radio"
+				id="bin" name="streamBase" value="bin">   <label for="bin">Base
+				2</label> <input type="radio" id="decimal" name="streamBase"
+				value="alphabetical">   <label for="decimal">Base 26</label><br>
+			<input type="button" value="Stream Cipher"
+				onClick="computeStream('Crypto?cryptomethod=symmetric&method=stream')">
 		</div>
 		<div style="display: none;" id="rc4Box">
-			<p>Explanation</p>
+			<h1>RC4</h1>
+			<p>RC4 (known as Rivest Cipher 4) is a stream cipher, it goes through a key scheduling process, pseudo random number generation
+			and the key generated is then XOR'd with the plaintext to encrypt it.</p>
 			<div class="col-md-6">
-				<label for="rc4Input" class="form-label">Input</label> <input
+				<label for="rc4Input" class="form-label">Input</label><span
+					style="display: none;" id="rc4-input-error">*</span> <input
 					type="text" class="form-control" id="rc4Input">
 			</div>
 			<div class="col-md-6">
-				<label for="rc4key" class="form-label">Key</label> <input
+				<label for="rc4key" class="form-label">Key</label><span
+					style="display: none;" id="rc4-key-error">*</span> <input
 					type="text" class="form-control" id="rc4key">
 			</div>
-			<br>
-			<input type="button" value="RC4"
+			<br> <input type="button" value="RC4"
 				onClick="computeRC4('Crypto?cryptomethod=symmetric&method=rc4');">
 		</div>
 		<div style="display: none;" id="bbsBox">
-			<p>Explanation</p>
+			<h1>BBS</h1>
+			<p>Blum Blum Shub was invented by 1986 by Lenore Blum, Manuel Blum, and Michael Shub. It's a pseudorandom number
+			generator.</p>
 			<div class="col-md-6">
-				<label for="bbsInput" class="form-label">Input</label> <input type="text"
-					class="form-control" id="bbsInput">
+				<label for="bbsInput" class="form-label">Input</label><span
+					style="display: none;" id="bbs-input-error">*</span> <input
+					type="text" class="form-control" id="bbsInput">
 			</div>
 			<div class="col-md-6">
-				<label for="pVal" class="form-label">p</label> <input type="text"
+				<label for="pVal" class="form-label">p</label><span
+					style="display: none;" id="bbs-p-error">*</span> <input type="text"
 					class="form-control" id="pVal">
 			</div>
 			<div class="col-md-6">
-				<label for="qVal" class="form-label">q</label> <input type="text"
+				<label for="qVal" class="form-label">q</label><span
+					style="display: none;" id="bbs-q-error">*</span> <input type="text"
 					class="form-control" id="qVal">
 			</div>
 			<div class="col-md-6">
-				<label for="bbsSeed" class="form-label">Seed</label> <input type="text"
-					class="form-control" id="bbsSeed">
+				<label for="bbsSeed" class="form-label">Seed</label><span
+					style="display: none;" id="bbs-seed-error">*</span> <input
+					type="text" class="form-control" id="bbsSeed">
 			</div>
-			<br>
-			<input type = "button" value="Blum Blum Shub"
+			<br> <input type="button" value="Blum Blum Shub"
 				onClick="computeBBS('Crypto?cryptomethod=symmetric&method=bbs');">
 		</div>
 		<div style="display: none;" id="desBox">
+			<h1>DES</h1>
+			<p>Stands for Data Encryption Standard, this block cipher does 16 identical operations where it uses a different derivative of the main key every round.
+			It encrypts blocks of 64 bits at a time but a key length of 56 bit is proved to be insecure, and this cipher was later replaced by AES</p>
 			<div class="col-md-6">
-				<label for="desInput" class="form-label">Input</label> <input
+				<label for="desInput" class="form-label">Input</label><span
+					style="display: none;" id="des-input-error">*</span> <input
 					type="text" class="form-control" id="desInput">
 			</div>
 			<div class="col-md-6">
-				<label for="desKey" class="form-label">Key</label> <input type="text"
-					class="form-control" id="desKey">
+				<label for="desKey" class="form-label">Key</label><span
+					style="display: none;" id="des-key-error">*</span> <input
+					type="text" class="form-control" id="desKey">
 			</div>
-			<input type="radio" id="desEncrypt" name="desProcess" value="e">   <label for="desEncrypt">Encrypt</label>
-			<input type="radio" id="desDecrypt" name="desProcess" value="d">   <label for="desDecrypt">Decrypt</label>
-			<br>
-			<input type="button" value="DES Cipher" onClick= "computeDES('Crypto?cryptomethod=symmetric&method=des')">
+			<input type="radio" id="desEncrypt" name="desProcess" value="e">
+			  <label for="desEncrypt">Encrypt</label> <input type="radio"
+				id="desDecrypt" name="desProcess" value="d">   <label
+				for="desDecrypt">Decrypt</label> <br> <input type="button"
+				value="DES Cipher"
+				onClick="computeDES('Crypto?cryptomethod=symmetric&method=des')">
 		</div>
 		<div style="display: none;" id="aesBox">
+		<h1>AES</h1>
+		<p>Also known as Advanced Encryption Standard. After a need for a new block cipher was announced, two Belgium cryptologists came with Rijndael
+		and beat the other 14 candidate algorithms. Depending on key length, there could be 10, 12, or 14 rounds in the cipher process. This is proved
+		to be safer as brute force is impossible due to the key length and it's considered quantum-safe since the cipher can adapt to 
+		a quantum attack by increasing key size</p>
 			<div class="col-md-6">
-				<label for="aesInput" class="form-label">Input</label> <input
+				<label for="aesInput" class="form-label">Input</label><span
+					style="display: none;" id="aes-input-error">*</span> <input
 					type="text" class="form-control" id="aesInput">
 			</div>
 			<div class="col-md-6">
-				<label for="aesKey" class="form-label">Key</label> <input type="text"
-					class="form-control" id="aesKey">
+				<label for="aesKey" class="form-label">Key</label><span
+					style="display: none;" id="aes-key-error">*</span> <input
+					type="text" class="form-control" id="aesKey">
 			</div>
-			<input type="radio" id="aesEncrypt" name="aesProcess" value="e">   <label for="aesEncrypt">Encrypt</label>
-			<input type="radio" id="aesDecrypt" name="aesProcess" value="d">   <label for="aesDecrypt">Decrypt</label>
-			<br>
-			<input type="button" value="AES Cipher" onClick= "computeAES('Crypto?cryptomethod=symmetric&method=aes')">
+			<input type="radio" id="aesEncrypt" name="aesProcess" value="e">
+			  <label for="aesEncrypt">Encrypt</label> <input type="radio"
+				id="aesDecrypt" name="aesProcess" value="d">   <label
+				for="aesDecrypt">Decrypt</label> <br> <input type="button"
+				value="AES Cipher"
+				onClick="computeAES('Crypto?cryptomethod=symmetric&method=aes')">
 		</div>
 		<br>
 		<h2 id="output"></h2>

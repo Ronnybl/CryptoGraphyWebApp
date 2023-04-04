@@ -53,21 +53,22 @@ public class Crypto extends HttpServlet {
 		if(request.getParameter("cryptomethod") != null && request.getParameter("cryptomethod").equals("asymmetric")) {
 			if(request.getParameter("method") != null) {
 				String method = request.getParameter("method");
-				output = method + "=" + asymmetricFunctions(method, request);
+				output = asymmetricFunctions(method, request);
 			}
 		}
 		else if (request.getParameter("cryptomethod") != null && request.getParameter("cryptomethod").equals("foundation")) {
 			if(request.getParameter("method") != null) {
 				String method = request.getParameter("method");
-				output = method + "=" + foundationFunctions(method, request);
+				output = foundationFunctions(method, request);
 			}
 		}
 		else if (request.getParameter("cryptomethod") != null && request.getParameter("cryptomethod").equals("symmetric")) {
 			if(request.getParameter("method") != null) {
 				String method = request.getParameter("method");
-				output = method + "=" + symmetricFunctions(method, request);
+				output = symmetricFunctions(method, request);
 			}
 		}
+		output = "Output: " + output;
 		response.setContentType("application/json");
 		output = ("{\"output\":" + "\"" + output+ "\"" + "}");
 		resOut.write(output);
@@ -196,14 +197,14 @@ public class Crypto extends HttpServlet {
 	}
 	private String rsaDecrypt(BigInteger text, BigInteger d, BigInteger n) {
 		byte[] pt = text.modPow(d, n).toByteArray();
-		return ("Hex: " + CryptoTools.bytesToHex(pt)+ " Word: " + new String(pt));
+		return ("RSA Plaintext in Hex Form\\n " + CryptoTools.bytesToHex(pt)+ " \\nPlaintext\\n " + new String(pt));
 	}
 
 	private String rsaEncrypt(String text, BigInteger e, BigInteger n) throws IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, InvalidKeyException {
 		try {
 			BigInteger textBigInt = new BigInteger(text);
 			byte[] ct = textBigInt.modPow(e, n).toByteArray();
-			return ("Hex: " + CryptoTools.bytesToHex(ct)+ " Word: " + new String(ct));
+			return ("Hex= " + CryptoTools.bytesToHex(ct));
 		}
 		catch(NumberFormatException exc){
 			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
@@ -356,7 +357,7 @@ public class Crypto extends HttpServlet {
 					} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException
 							| NoSuchAlgorithmException | NoSuchPaddingException e) {
 						e.printStackTrace();
-						return "Error DES Encrypt";
+						return "Error AES Encrypt";
 					}
 				}
 				else if (request.getParameter("process") != null && request.getParameter("process").equals("d")) {
@@ -365,7 +366,7 @@ public class Crypto extends HttpServlet {
 					} catch (InvalidKeyException | InvalidAlgorithmParameterException | NoSuchAlgorithmException
 							| NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e) {
 						e.printStackTrace();
-						return "Error DES Decrypt";
+						return "Error AES Decrypt";
 					}
 				}
 			}
@@ -433,7 +434,7 @@ public class Crypto extends HttpServlet {
 		BigInteger commonKeyAlice = bobKey.modPow(aX, p);
 		BigInteger commonKeyBob = aliceKey.modPow(bX, p);
 		String output = "";
-		output += "Session Key From Alice " + commonKeyAlice + " Session Key From Bob " + commonKeyBob + " Is Equal? " + commonKeyBob.equals(commonKeyAlice);
+		output += "Session Key From First User " + commonKeyAlice + " Session Key From Second User " + commonKeyBob + " Are the keys equal? " + commonKeyBob.equals(commonKeyAlice);
 		return output;
 	}
 	private String caesarEncrypt(String text, int key) {
@@ -443,7 +444,7 @@ public class Crypto extends HttpServlet {
 		for(int i = 0; i < pt.length; i++) {
 			ct[i] = (byte) ((byte) ((byte) (pt[i] - 'A') + key) % 26 + 'A');
 		}
-		return "CipherText: " + new String(ct);
+		return new String(ct);
 	}
 	private String caesarDecrypt(String text, int key) {
 		byte[] pt = text.getBytes();
@@ -458,7 +459,7 @@ public class Crypto extends HttpServlet {
 				ct[i] = (byte) ((byte) ((byte) (pt[i] - 'A') - key) % 26 + 'A');
 			}
 		}
-		return "PlainText: " + new String(ct);
+		return new String(ct);
 	}
 
 	private String caesarBrute(String text) {
@@ -508,11 +509,12 @@ public class Crypto extends HttpServlet {
 		byte[] ct = text.getBytes();
 		ct = CryptoTools.clean(ct);
 		byte[] pt = new byte[ct.length];
-		int invFlag = 0;
+		int aInv = 0;
+		int flag = 0;
 		for (int i = 0; i< 26; i++) {
-			invFlag = (alpha * i) % 26;
-			if (invFlag == 1) {
-				invFlag = 1;
+			flag = (alpha * i) % 26;
+			if (flag == 1) {
+				aInv = i;
 			}
 		}
 		String output = "";
@@ -520,7 +522,7 @@ public class Crypto extends HttpServlet {
         {
             if (text.charAt(i) != ' ')
             {
-            	output = output + (char) (((invFlag *
+            	output = output + (char) (((aInv *
                         ((text.charAt(i) + 'A' - beta)) % 26)) + 'A');
             }
             else //else simply append space character
@@ -528,10 +530,12 @@ public class Crypto extends HttpServlet {
                 output += text.charAt(i);
             }
         }
-		return "Plaintext: " + output;
+		return output;
 	}
 	
 	private String vigenereEncrypt(String text, String key) {
+		text = text.toUpperCase();
+		key = key.toUpperCase();
 		String ct = "";
 		int y = text.length();
 		for (int i = 0; ; i++) {
@@ -551,7 +555,19 @@ public class Crypto extends HttpServlet {
 		return ct;
 	}
 	private String vigenereDecrypt(String text, String key) {
+		text = text.toUpperCase();
+		key = key.toUpperCase();
 		String pt = "";
+		int y = text.length();
+		for (int i = 0; ; i++) {
+			if (y == i) {
+				i = 0;
+			}
+			if (key.length() == text.length()) {
+				break;
+			}
+			key += key.charAt(i);
+		}
 		for (int i = 0; i < text.length() && i < key.length(); i++) {
 			int x = (text.charAt(i) - key.charAt(i) + 26) % 26;
 			
@@ -571,13 +587,16 @@ public class Crypto extends HttpServlet {
 				int charPosition = keyChar - 'A' + 1;
 				int shift = pt[i] - 'A' - charPosition;
 				if (shift < 0) {
+					while(shift < -26) {
+						shift += 26;
+					}
 					ct[i] = (byte) CryptoTools.ALPHABET.charAt(CryptoTools.ALPHABET.length() + shift);
 				}
 				else {
 					ct[i] = (byte) ((byte) ((byte) (pt[i] - 'A') - (charPosition % 26)) % 26 + 'A');
 				}
 			}
-			return "PlainText: " + new String(ct);
+			return new String(ct);
 		}
 		else {
 			String binOutput = "";
@@ -600,7 +619,7 @@ public class Crypto extends HttpServlet {
 				int charPosition = keyChar - 'A' + 1;
 				ct[i] = (byte) ((byte) ((byte) (pt[i] - 'A') + charPosition) % 26 + 'A');
 			}
-			return "CipherText: " + new String(ct);
+			return new String(ct);
 		}
 		else {
 			String binOutput = "";
